@@ -1,0 +1,29 @@
+name: TG Monitor
+
+on:
+  workflow_dispatch:       # 允许手动点击按钮启动
+  schedule:
+    - cron: '0 */5 * * *'  # 每5小时自动重启一次 (防止任务超时停止)
+
+jobs:
+  run-monitor:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 检出代码
+        uses: actions/checkout@v3
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 安装依赖
+        run: pip install telethon
+
+      - name: 运行监控
+        env:
+          TG_API_ID: ${{ secrets.TG_API_ID }}
+          TG_API_HASH: ${{ secrets.TG_API_HASH }}
+          TG_SESSION: ${{ secrets.TG_SESSION }}
+        # 设置超时时间为 19800秒 (5.5小时)，配合 cron 重启实现全天在线
+        run: timeout 19800s python monitor.py || exit 0
