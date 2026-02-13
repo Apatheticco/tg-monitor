@@ -25,5 +25,5 @@ jobs:
           TG_API_ID: ${{ secrets.TG_API_ID }}
           TG_API_HASH: ${{ secrets.TG_API_HASH }}
           TG_SESSION: ${{ secrets.TG_SESSION }}
-        # 设置超时时间为 17800秒，配合 cron 重启实现全天在线
-        run: timeout 17800s python monitor.py || exit 0
+        # 设置超时时间为 17400秒，配合 cron 重启实现全天在线
+        run: timeout 17400s python monitor.py || exit 0
